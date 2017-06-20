@@ -26,6 +26,8 @@ be performed on a daily or interannual basis.}
 
 \item{ylim}{'ylim' argument passed to the time series plot.}
 
+\item{col.pal}{Color Palette. Default  \code{cm.colors(10)}.}
+
 \item{main}{'main' argument passed to the plot.}
 }
 \value{

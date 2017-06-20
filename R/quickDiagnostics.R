@@ -13,6 +13,7 @@
 #' @param main 'main' argument passed to the plot.
 #' @family visualization
 #' @importFrom fields image.plot
+#' @importFrom grDevices cm.colors
 #' @return Two diagnostic plots with observed, simulated and (possibly) downscaled time series, and a QQ-plot by percentlies.
 #' @author M. Iturbide 
 #' @export
@@ -41,7 +42,7 @@ quickDiagnostics <- function(obs, sim, downscaled = NULL, location = c(-42.5, -3
 #' @importFrom stats cor
 #' @importFrom graphics par plot axis text polygon lines legend points
 #' @importFrom stats sd cor
-#' @importFrom grDevices rgb
+#' @importFrom grDevices rgb colorRampPalette
 #' @keywords internal
 #' @importFrom transformeR subsetGrid getCoordinates getYearsAsINDEX draw.world.lines
 
