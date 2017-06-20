@@ -6,7 +6,7 @@
 \usage{
 quickDiagnostics(obs, sim, downscaled = NULL, location = c(-42.5, -3),
   type = c("daily", "interannual"), members = NULL, na.tolerance = 0.3,
-  ylim = NULL, main = NULL)
+  ylim = NULL, col.pal = cm.colors(10), main = NULL)
 }
 \arguments{
 \item{obs}{grid of observations.}

@@ -124,10 +124,11 @@
 #' @author S. Herrera, M. Iturbide, J. Bedia
 #' @export
 #' @examples 
+#' \donttest{
 #' require(transformeR)
-#' data(VALUE_Igueldo_tp)
+#' data(VALUE_Iberia_tp)
 #' data(NCEP_Iberia_tp)
-#' y <- VALUE_Igueldo_tp
+#' y <- VALUE_Iberia_tp
 #' x <- NCEP_Iberia_tp
 #' 
 #' eqm1 <- biasCorrection(y = y, x = x, 
@@ -151,6 +152,7 @@
 #' qqplot(y$Data, eqm1win$Data)
 #' lines(c(0,100), c(0,100))
 #' par(mfrow = c(1,1))
+#' }
 
 
 
@@ -370,7 +372,7 @@ biasCorrectionXD <- function(y, x, newdata, precipitation,
                                           before <- min(indDays[indObs]) - 1 - window/2 < 1
                                           if (before) head <- (window/2) + (min(indDays[indObs]) - 1 - window/2) 
                                           after <- max(indDays[indObs]) + window/2 > nrow(dayList)
-                                          if (after) tail <- nrow(dayList) - max(indDays[indObs])   
+                                          if (after) tail <- nrow(dayList) - max(indDays[indObs]) -1   
                                     }
                                     indObsWindow <- array(data = NA, dim = c((head + step + tail)*length(indObs)/step,1))
                                     breaks <- c(which(diff(indObs) != 1), length(indObs))
@@ -396,6 +398,7 @@ biasCorrectionXD <- function(y, x, newdata, precipitation,
                                           if (method == "delta") {
                                                 o1 <- obs$Data[indObs,ind[i,1],ind[i,2]]
                                           } else {
+                                            ########################################################!!!!!!!!!!!!
                                                 o1 <- obs$Data[indObsWindow,ind[i,1],ind[i,2]]
                                           }
                                     )

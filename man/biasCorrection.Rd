@@ -137,10 +137,11 @@ qqmap to alleviate the problems arising when the dry day frequency in the raw mo
 }
 
 \examples{
+\donttest{
 require(transformeR)
-data(VALUE_Igueldo_tp)
+data(VALUE_Iberia_tp)
 data(NCEP_Iberia_tp)
-y <- VALUE_Igueldo_tp
+y <- VALUE_Iberia_tp
 x <- NCEP_Iberia_tp
 
 eqm1 <- biasCorrection(y = y, x = x, 
@@ -164,6 +165,7 @@ lines(c(0,100), c(0,100))
 qqplot(y$Data, eqm1win$Data)
 lines(c(0,100), c(0,100))
 par(mfrow = c(1,1))
+}
 }
 \references{
 \itemize{

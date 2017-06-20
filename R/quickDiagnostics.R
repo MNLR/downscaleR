@@ -9,6 +9,7 @@
 #' @param members An integer vector indicating \strong{the position} of the members to be subset.
 #' @param na.tolerance proportion of NAs in a grid cell (location) that are allowed to calculate correlation. 
 #' @param ylim 'ylim' argument passed to the time series plot.
+#' @param col.pal Color Palette. Default  \code{cm.colors(10)}.
 #' @param main 'main' argument passed to the plot.
 #' @family visualization
 #' @importFrom fields image.plot
@@ -17,7 +18,7 @@
 #' @export
 
 
-quickDiagnostics <- function(obs, sim, downscaled = NULL, location = c(-42.5, -3), type = c("daily", "interannual"), members = NULL, na.tolerance = .3, ylim = NULL, main = NULL){
+quickDiagnostics <- function(obs, sim, downscaled = NULL, location = c(-42.5, -3), type = c("daily", "interannual"), members = NULL, na.tolerance = .3, ylim = NULL, col.pal = cm.colors(10), main = NULL){
       type <- match.arg(type, choices = c("daily", "interannual"))
       if(!is.null(members)){
             sim <- subsetGrid(sim, members = members)
@@ -31,7 +32,7 @@ quickDiagnostics <- function(obs, sim, downscaled = NULL, location = c(-42.5, -3
             }
             dailyOutlook(obs, sim, downscaled, location, ylim)
       } else if (type == "interannual") {
-            interannualOutlook(obs, sim, downscaled, location, na.tolerance = na.tolerance, ylim, main)
+            interannualOutlook(obs, sim, downscaled, location, na.tolerance = na.tolerance, ylim, col.pal = col.pal, main)
       }
 }
 #end
@@ -44,7 +45,7 @@ quickDiagnostics <- function(obs, sim, downscaled = NULL, location = c(-42.5, -3
 #' @keywords internal
 #' @importFrom transformeR subsetGrid getCoordinates getYearsAsINDEX draw.world.lines
 
-interannualOutlook <- function(obs, sim, downscaled = NULL, location = c(-42.5, -3), na.tolerance = .3, ylim = NULL, main = NULL){
+interannualOutlook <- function(obs, sim, downscaled = NULL, location = c(-42.5, -3), na.tolerance = .3, ylim = NULL, col.pal = cm.colors(10), main = NULL){
       par(mfrow = c(1,2))
       period.id <- (getYearsAsINDEX(sim))
       period <- unique(period.id)
@@ -115,51 +116,51 @@ interannualOutlook <- function(obs, sim, downscaled = NULL, location = c(-42.5, 
                   ma <-  floor(max(c(x,y)))
                   ylim <- c(mi, ma + (ma-mi))
             }
-            plot(1:length(period), x, xlim = c(0,length(period)), ylim = ylim, xlab="", xaxt = "n", 
+            plot(1:length(period), x, xlim = c(0,length(period)), ylim = ylim, xlab="", xaxt = "n",
                  ylab = "Annual/seasonal mean value", cex = .6, col = NULL, main = main)
             tck <- axis(1, at = 1:length(period), labels=FALSE)
-            text(tck,  par("usr")[3] - 2, xpd = TRUE, labels = (1981:2010), 
+            text(tck,  par("usr")[3] - 2, xpd = TRUE, labels = (1981:2010),
                  srt = 90, cex =.6)
             #plot the sd (shadows)
             polygon(x = c(1:length(period), length(period):1), y =c (ys+y,rev(y-ys)), col = rgb(1,0,0,0.2), border = NA)
             if (!is.null(downscaled)) {
                   if(comper == TRUE){
-                        polygon(x = c(1:length(period), length(period):1), 
+                        polygon(x = c(1:length(period), length(period):1),
                                 y =c (ws+w,rev(w-ws)), col = rgb(0,0,1,0.2), border = NA)
                         #plot the mean (lines)
                         lines(1:length(period), x[1:length(period)], lwd = 2, xlim = c(0,length(period)))
                         lines(1:length(period), y[1:length(period)], lwd = 2, xlim = c(0,length(period)),
                               col="red")
-                        lines(1:length(period), w, col = "blue", lwd = 2)     
+                        lines(1:length(period), w, col = "blue", lwd = 2)
                   }else{
-                        polygon(x = c((length(train.period)+1):length(period), length(period):(length(train.period)+1)), 
+                        polygon(x = c((length(train.period)+1):length(period), length(period):(length(train.period)+1)),
                                 y =c (ws+w,rev(w-ws)), col = rgb(0,0,1,0.2), border = NA, main = main)
                         #plot the mean (lines)
                         lines(1:(length(train.period)+1), x[1:(length(train.period)+1)], lwd = 2, lty = 4, xlim = c(0,length(period)))
-                        lines((1+length(train.period)):length(period) , x[(1+length(train.period)):length(period)], 
+                        lines((1+length(train.period)):length(period) , x[(1+length(train.period)):length(period)],
                               lwd = 2)
                         lines(1:(length(train.period)+1), y[1:(length(train.period)+1)], lwd = 2, lty = 4, xlim = c(0,length(period)),
                               col="red")
-                        lines((1+length(train.period)):length(period) , y[(1+length(train.period)):length(period)], 
+                        lines((1+length(train.period)):length(period) , y[(1+length(train.period)):length(period)],
                               lwd = 2, col ="red")
                         lines((length(train.period)+1):length(period), w, col = "blue", lwd = 2)
                   }
-                  legend(0, ylim[2] , legend = c("obs",  
-                                                 paste("direct: rho=", 
-                                                       round(rho.direct, digits = 2), ", bias=", 
-                                                       round(bias.direct, digits = 2), sep = ""), 
-                                                 paste("downscaled: rho=", 
-                                                       round(rho.down, digits = 2), ", bias=", 
-                                                       round(bias.down, digits = 2), sep = "")), 
+                  legend(0, ylim[2] , legend = c("obs",
+                                                 paste("direct: rho=",
+                                                       round(rho.direct, digits = 2), ", bias=",
+                                                       round(bias.direct, digits = 2), sep = ""),
+                                                 paste("downscaled: rho=",
+                                                       round(rho.down, digits = 2), ", bias=",
+                                                       round(bias.down, digits = 2), sep = "")),
                          fill = c("black", "red", "blue"), box.lwd = 0, cex = .8)
             } else {
                   # plot the mean (lines)
                   lines(1:length(period), x, lwd = 2)
                   lines(1:length(period), y, lwd = 2, col ="red")
-                  legend(0, ylim[2] , legend = c("obs",  
-                                                 paste("direct: rho=", 
-                                                       round(rho.direct, digits = 2), ", bias=", 
-                                                       round(bias.direct, digits = 2), sep = "")), 
+                  legend(0, ylim[2] , legend = c("obs",
+                                                 paste("direct: rho=",
+                                                       round(rho.direct, digits = 2), ", bias=",
+                                                       round(bias.direct, digits = 2), sep = "")),
                          fill = c("black", "red"), box.lwd = 0, cex = .8)
             }
             ## correlation map
@@ -189,9 +190,12 @@ interannualOutlook <- function(obs, sim, downscaled = NULL, location = c(-42.5, 
                   r[coords[i,1],coords[i,2]] <- cor(x,w,method = "spearman")
             }
             # Ignore negative values
-            r[which(r < 0)] <- 0
-            image.plot(x.coord, y.coord, r, asp = 1, breaks = seq(0,1,0.1),
-                       nlevel = 10, lab.breaks = c("=<0",as.character(seq(0.1,1,0.1))),
+            # r[which(r < 0)] <- 0
+            image.plot(x.coord, y.coord, r, asp = 1, breaks = seq(-1,1,0.1),
+                       nlevel = 20, col = colorRampPalette(col.pal)(20),
+                       # lab.breaks = c("=<0",as.character(seq(0.1,1,0.1))),
+                       #breaks = seq(0,1,0.1),
+                       #nlevel = 10, lab.breaks = c("=<0",as.character(seq(0.1,1,0.1))),
                        xlab = "longitude", ylab = "latitude")
             
             draw.world.lines()
@@ -251,7 +255,7 @@ interannualOutlook <- function(obs, sim, downscaled = NULL, location = c(-42.5, 
             plot(1:length(period), x, xlim = c(0,length(period)), ylim = ylim, xlab="", xaxt = "n", 
                  ylab = "Annual/seasonal mean value", cex = .6, col = NULL, main = main)
             tck <- axis(1, at = 1:length(period), labels=FALSE)
-            text(tck,  par("usr")[3] - 2, xpd = TRUE, labels = (1981:2010), 
+            text(tck,  par("usr")[3] - 2, xpd = TRUE, labels = (period), 
                  srt = 90, cex =.6)
             if (!is.null(downscaled)) {
                   #plot the mean (lines)
@@ -319,9 +323,10 @@ interannualOutlook <- function(obs, sim, downscaled = NULL, location = c(-42.5, 
                   
             }
             # Ignore negative values
-            r[which(r < 0)] <- 0
-            image.plot(x.coord, y.coord, r, asp = 1, breaks = seq(0,1,0.1),
-                       nlevel = 10, lab.breaks = c("=<0",as.character(seq(0.1,1,0.1))),
+            # r[which(r < 0)] <- 0
+            image.plot(x.coord, y.coord, r, asp = 1, breaks = seq(-1,1,0.1),
+                       nlevel = 20, col = colorRampPalette(col.pal)(20),
+                       # lab.breaks = c("=<0",as.character(seq(0.1,1,0.1))),
                        xlab = "longitude", ylab = "latitude")
             draw.world.lines()
             points(location[1], location[2], cex = 2, pch = 17)
